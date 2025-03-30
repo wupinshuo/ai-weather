@@ -1,5 +1,8 @@
 # ai-weather
-Combine AI to analyze weather conditions
+## 介绍
+ai-weather是一个基于AI分析的天气查询服务。
+
+## 快速开始
 
 ## 前置条件
 - NodeJs >= 20
@@ -20,4 +23,9 @@ yarn
 ## 启动服务
 ```bash
 yarn start:dev
+```
+
+## 测试服务运行情况
+```bash
+curl localhost:8080/api/v1/hello
 ```
