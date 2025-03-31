@@ -10,17 +10,22 @@ AI Weather Service 是一个基于人工智能的天气查询服务。它基于D
 - 未来三天天气预测
 
 ## 项目结构
-api/                # API工具模块
---- ai.ts           # 火山引擎API封装（天气查询服务）
-src/
-├── app.module.ts        # 应用程序主模块
-├── main.ts             # 应用程序入口文件
-└── weather/            # 天气模块
-    ├── weather.controller.ts
-    ├── weather.module.ts
-    └── weather.service.ts
-tools/                  # 工具模块
---- time.ts            # 时间工具
+├── api/                           # API工具模块
+│   └── ai.ts                      # 火山引擎API封装（天气查询服务）
+├── src/                           # 源代码目录
+│   ├── app.controller.ts          # 应用程序控制器
+│   ├── app.module.ts              # 应用程序主模块
+│   ├── app.service.ts             # 应用程序服务
+│   ├── main.ts                    # 应用程序入口文件
+│   └── weather/                   # 天气模块
+│       ├── weather.controller.ts  # 天气控制器
+│       ├── weather.module.ts      # 天气模块配置
+│       └── weather.service.ts     # 天气服务实现
+├── tools/                         # 工具模块
+│   └── time.ts                    # 时间工具
+
+```plaintext
+```
 
 
 
@@ -34,11 +39,16 @@ tools/                  # 工具模块
 ### 环境配置
 1. 克隆项目
 ```bash
-git clone <repository-url>
+git clone https://github.com/wupinshuo/ai-weather.git
 cd ai-weather
 ```
 
-复制 .env.example 为 .env
+2. 复制 .env.example 为 .env
+```bash
+cp .env.example .env
+```
+3. 配置.env文件
+
 
 ### 使用nvmrc配置node版本
 ```bash
