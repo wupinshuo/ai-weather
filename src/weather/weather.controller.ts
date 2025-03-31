@@ -5,8 +5,8 @@ import { WeatherService } from './weather.service';
 export class WeatherController {
   constructor(private readonly weatherService: WeatherService) {}
 
-  @Get(':userId')
-  public async getWeather(@Param('userId') userId: string) {
-    return this.weatherService.getWeatherByAi(userId);
+  @Get()
+  public async getWeather() {
+    return this.weatherService.getWeatherByAi();
   }
 }
