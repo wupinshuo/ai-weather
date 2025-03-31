@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { aiService } from 'tools/api/ai';
+import { aiService } from 'api/ai';
 
 @Injectable()
 export class WeatherService {
