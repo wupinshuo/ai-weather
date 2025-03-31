@@ -24,10 +24,6 @@ AI Weather Service 是一个基于人工智能的天气查询服务。它基于D
 ├── tools/                         # 工具模块
 │   └── time.ts                    # 时间工具
 
-```plaintext
-```
-
-
 
 ## 快速开始
 
