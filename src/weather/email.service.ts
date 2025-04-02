@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { EmailEnabled } from 'decorators/email-enabled.decorator';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
+@EmailEnabled
 export class EmailService {
   private transporter: nodemailer.Transporter;
-
-  /** 是否开启邮件推送开关 */
-  private isOpenEmail = process.env.IS_OPEN_EMAIL === 'true';
 
   /** SMTP邮箱 */
   private smtpEmail = process.env.SMTP_EMAIL as string;

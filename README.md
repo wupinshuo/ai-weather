@@ -53,7 +53,7 @@ SMTP_HOST=your_mail_host
 SMTP_PORT=your_mail_port
 SMTP_EMAIL=your_mail_user
 SMTP_PASSWORD=your_mail_pass
-IS_OPEN_EMAIL=true
+EMAIL_ENABLED=true
 ```
 
 
