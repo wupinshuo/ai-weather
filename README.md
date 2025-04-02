@@ -20,7 +20,8 @@ AI Weather Service 是一个基于人工智能的天气查询服务。它基于D
 │   └── weather/                   # 天气模块
 │       ├── weather.controller.ts  # 天气控制器
 │       ├── weather.module.ts      # 天气模块配置
-│       └── weather.service.ts     # 天气服务实现
+│       └── weather.service.ts     # 天气服务
+│       └── email.service.ts       # 邮件服务
 ├── tools/                         # 工具模块
 │   └── time.ts                    # 时间工具
 
@@ -44,6 +45,16 @@ cd ai-weather
 cp .env.example .env
 ```
 3. 配置.env文件
+```bash
+# 配置火山引擎相关信息
+
+# 邮件配置（默认开启QQ邮箱的SMTP服务）
+SMTP_HOST=your_mail_host
+SMTP_PORT=your_mail_port
+SMTP_EMAIL=your_mail_user
+SMTP_PASSWORD=your_mail_pass
+IS_OPEN_EMAIL=true
+```
 
 
 ### 使用nvmrc配置node版本
