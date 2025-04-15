@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模块
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?  // 用户名
+  email     String?  @unique // 邮箱
+  image     String?  // 头像
+  province  String?  // 省份
+  area      String?  // 地区
+  createdAt DateTime? @default(now()) 
+  updatedAt DateTime? @updatedAt 
+}
+
+// 天气模块
+model Weather {
+  id          Int      @id @default(autoincrement())
+  province    String // 省份
+  area        String // 地区
+  weather_date String // 日期 格式：2025-01-01
+  timestamp   Int // 时间戳 
+  weather_condition String // 天气状况
+  temperature String  // 温度
+  temperature_range String // 温度范围
+  wind String // 风力信息
+  precipitation String  // 降水量
+  humidity String // 湿度
+  air_quality String // 空气质量
+  air_quality_index String  // 空气质量指数
+  live_tips String // 生活建议
+  tips String  // 温馨提示
+}

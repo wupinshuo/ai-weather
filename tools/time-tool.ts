@@ -24,6 +24,15 @@ class TimeTool {
     }
     return `${seconds}秒`;
   }
+
+  /**
+   * 获取中国时间
+   * @param now 时间 默认当前时间
+   * @returns 时间显示格式
+   */
+  public getNowChinaTimeStr(): string {
+    return new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+  }
 }
 
 export const timeTool = new TimeTool();

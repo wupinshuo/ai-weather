@@ -66,10 +66,37 @@ nvm use
 ```bash
 yarn 
 ```
+
+## 启动数据库
+```bash
+yarn docker:start
+```
+
+## 初始化数据库
+```bash
+yarn init:db
+```
+
 ## 启动服务（开发环境）
 ```bash
 yarn start:dev
 ```
+
+## 更改数据库
+```bash
+yarn prisma:migrate xxx （类似于git commit、 push）
+```
+
+## 更新本地数据库类型依赖
+```bash
+yarn prisma:generate (类似于git pull)
+```
+
+## 查询数据库可视化页面
+```bash
+yarn prisma:studio
+```
+自动打开浏览器 localhost:5555
 
 # 测试服务是否正常运行
 curl localhost:8080/api/v1/hello
