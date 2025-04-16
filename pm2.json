@@ -1,0 +1,19 @@
+{
+  "apps": [
+    {
+      "name": "ai-weather",
+      "script": "src/main.ts",
+      "instances": 1,
+      "autorestart": true,
+      "watch": true,
+      "time": true,
+      "exec_mode": "fork",
+      "interpreter": "node",
+      "interpreter_args": "-r ts-node/register -r tsconfig-paths/register",
+      "env": {
+        "NODE_ENV": "development",
+        "TS_NODE_PROJECT": "./tsconfig.json"
+      }
+    }
+  ]
+}

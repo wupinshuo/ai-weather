@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { timeTool } from 'tools/time-tool';
+import { timeTool } from '../tools/time-tool';
 
 // 读取环境变量
 dotenv.config();

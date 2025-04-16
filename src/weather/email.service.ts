@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EmailEnabled } from 'decorators/email-enabled.decorator';
+import { EmailEnabled } from '../../decorators/email-enabled.decorator';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()

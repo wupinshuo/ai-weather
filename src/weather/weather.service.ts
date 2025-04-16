@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { aiService } from 'api/ai';
+import { aiService } from '../../api/ai';
 import { EmailService } from './email.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Weather } from '@prisma/client';
 
 @Injectable()
