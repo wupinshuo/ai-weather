@@ -7,33 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 用户模块
+/// 用户模型
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String?  // 用户名
-  email     String?  @unique // 邮箱
-  image     String?  // 头像
-  province  String?  // 省份
-  area      String?  // 地区
-  createdAt DateTime? @default(now()) 
-  updatedAt DateTime? @updatedAt 
+  id        Int       @id @default(autoincrement()) /// 用户ID，自增主键
+  name      String?   /// 用户名称
+  email     String?   @unique /// 用户邮箱，唯一
+  image     String?   /// 用户头像
+  province  String?   /// 所在省份
+  area      String?   /// 所在地区
+  createdAt DateTime? @default(now()) /// 创建时间
+  updatedAt DateTime? @updatedAt /// 更新时间
 }
 
-// 天气模块
+/// 天气信息模型
 model Weather {
-  id          Int      @id @default(autoincrement())
-  province    String // 省份
-  area        String // 地区
-  weather_date String // 日期 格式：2025-01-01
-  timestamp   Int // 时间戳 
-  weather_condition String // 天气状况
-  temperature String  // 温度
-  temperature_range String // 温度范围
-  wind String // 风力信息
-  precipitation String  // 降水量
-  humidity String // 湿度
-  air_quality String // 空气质量
-  air_quality_index String  // 空气质量指数
-  live_tips String // 生活建议
-  tips String  // 温馨提示
+  id                Int    @id @default(autoincrement()) /// 天气记录ID，自增主键
+  province          String /// 省份
+  area              String /// 地区
+  weather_date      String /// 天气日期
+  timestamp         Int    /// 时间戳
+  weather_condition String /// 天气状况
+  temperature       String /// 当前温度
+  temperature_range String /// 温度范围
+  wind              String /// 风力风向
+  precipitation     String /// 降水量
+  humidity          String /// 湿度
+  air_quality       String /// 空气质量描述
+  air_quality_index String /// 空气质量指数
+  live_tips         String /// 生活提示
+  tips              String /// 天气提示
+}
+
+/// 黄金价格模型
+model gold {
+  id    Int      @id @default(autoincrement()) /// 记录ID，自增主键
+  gid   String   @db.VarChar(50) /// 黄金商品ID，唯一标识
+  name  String   @db.VarChar(100) /// 黄金商品名称
+  time  DateTime @db.Timestamp(3) /// 价格记录时间
+  price Decimal  @db.Decimal(10, 2) /// 黄金价格，精确到2位小数
 }
