@@ -1,5 +1,8 @@
+# 设置默认构建平台
+ARG TARGETPLATFORM=linux/amd64
+
 # 构建阶段
-FROM node:20-alpine AS builder
+FROM --platform=$TARGETPLATFORM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -20,7 +23,7 @@ RUN yarn install --frozen-lockfile
 RUN yarn build:docker
 
 # 运行阶段
-FROM node:20-alpine AS runner
+FROM --platform=$TARGETPLATFORM node:20-alpine AS runner
 
 # 设置工作目录
 WORKDIR /app
@@ -41,4 +44,4 @@ COPY . .
 
 EXPOSE 8081
 
-CMD ["node", "build/src/main.js"] 
+CMD ["node", "build/src/main.js"]

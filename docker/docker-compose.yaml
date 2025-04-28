@@ -3,6 +3,7 @@ version: '3.8'
 services:
   ai-weather:
     image: ${TXY_REGISTRY}/${TXY_PROJECT}/ai-weather:latest
+    platform: linux/amd64
     container_name: ai-weather
     ports:
       - "8081:8081"

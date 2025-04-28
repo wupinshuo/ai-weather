@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "docker:build": "docker build -t ai-weather .",
+    "docker:build": "docker build --platform linux/amd64 -t ai-weather .",
     "docker:tag": "docker tag ai-weather ${TXY_REGISTRY}/${TXY_PROJECT}/ai-weather:latest",
     "docker:push": "docker push ${TXY_REGISTRY}/${TXY_PROJECT}/ai-weather:latest",
     "docker:ci": "npm run docker:build && npm run docker:tag && npm run docker:push",
