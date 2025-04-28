@@ -6,11 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "postinstall": "npm run prisma:generate",
-    "build": "nest build && ts-node scripts/build",
-    "start:dev": "nest start --watch",
-    "start:prod": "node src/main.js",
-    "pm2:start": "pm2 delete ai-weather && pm2 start pm2.json",
+    "docker:build": "docker build -t ai-weather .",
+    "docker:tag": "docker tag ai-weather ${DOCKER_REGISTRY}/ai-weather:latest",
+    "docker:push": "docker push ${DOCKER_REGISTRY}/ai-weather:latest",
+    "docker:ci": "npm run docker:build && npm run docker:tag && npm run docker:push",
+    "build:docker": "nest build",
     "docker:start": "docker compose up -d",
     "init:user": "ts-node scripts/init-db.ts",
     "init:db": "rm -rf prisma/migrations && npm run prisma:reset && npm run prisma:migrate init && npm run prisma:generate && npm run init:user",
@@ -18,7 +18,8 @@
     "prisma:pull": "npx prisma db pull",
     "prisma:reset": "npx prisma migrate reset --force",
     "prisma:migrate": "npx prisma migrate dev --name",
-    "prisma:generate": "npx prisma generate"
+    "prisma:generate": "npx prisma generate",
+    "db:init": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

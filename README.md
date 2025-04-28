@@ -26,7 +26,7 @@ AI Weather Service 是一个基于人工智能的天气查询服务。它基于D
 │   └── time.ts                    # 时间工具
 
 
-## 快速开始
+## 一、快速开始
 
 ### 前置条件
 - NodeJs >= 20
@@ -62,44 +62,76 @@ EMAIL_ENABLED=true
 nvm use
 ```
 
-## 安装依赖
+### 安装依赖
 ```bash
 yarn 
 ```
 
-## 启动数据库
+### 启动数据库
 ```bash
 yarn docker:start
 ```
 
-## 初始化数据库
+### 初始化数据库
 ```bash
 yarn init:db
 ```
 
-## 启动服务（开发环境）
+### 启动服务（开发环境）
 ```bash
 yarn start:dev
 ```
 
-## 更改数据库
+### 更改数据库
 ```bash
 yarn prisma:migrate xxx （类似于git commit、 push）
 ```
 
-## 更新本地数据库类型依赖
+### 更新本地数据库类型依赖
 ```bash
 yarn prisma:generate (类似于git pull)
 ```
 
-## 查询数据库可视化页面
+### 查询数据库可视化页面
 ```bash
 yarn prisma:studio
 ```
 自动打开浏览器 localhost:5555
 
-# 测试服务是否正常运行
+### 测试服务是否正常运行
 curl localhost:8080/api/v1/hello
 
-# 获取指定地区天气
+### 获取指定地区天气
 curl localhost:8080/api/v1/weather
+
+## 二、Docker启动
+### 环境配置
+1. 克隆项目
+```bash
+git clone https://github.com/wupinshuo/ai-weather.git
+cd ai-weather
+```
+
+2. 复制 .env.example 为 .env
+```bash
+cp .env.example docker/.env
+```
+3. 配置.env文件
+
+4. 进入docker文件夹
+```bash
+cd docker
+```
+
+5. docker compose 启动
+```bash
+docker compose up -d
+```
+
+6. 初始化数据库
+进入docker ai-weather
+执行 
+```bash
+npx prisma migrate deploy 
+````
+

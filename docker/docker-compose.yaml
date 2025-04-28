@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ai-weather:
+    image: wupinshuo/ai-weather:latest
+    container_name: ai-weather
+    ports:
+      - "8081:8081"
+    environment:
+      DB_HOST: ai-pg
+      DATABASE_URL: postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}?schema=public
+      PORT: 8081
+    restart: on-failure
+    depends_on:
+      - ai-pg
+    networks:
+      - ai-network
+
+  ai-pg:
+    image: postgres:17.4
+    container_name: ai-pg
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_weather
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
