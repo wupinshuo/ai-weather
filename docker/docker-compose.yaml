@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   ai-weather:
-    image: wupinshuo/ai-weather:latest
+    image: ${TXY_REGISTRY}/${TXY_PROJECT}/ai-weather:latest
     container_name: ai-weather
     ports:
       - "8081:8081"
