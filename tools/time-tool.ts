@@ -56,10 +56,7 @@ class TimeTool {
    * @returns 时间显示格式
    */
   public getChinaTimeDate(now: Date = new Date()): Date {
-    console.log('now', now);
-    const newDate = this.getChinaTime(now).toDate();
-    console.log('newDate', newDate);
-    return newDate;
+    return this.getChinaTime(now).toDate();
   }
 }
 
