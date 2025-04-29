@@ -11,5 +11,11 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "cSpell.words": ["autoincrement", "autorestart", "Timestamptz"]
+  "cSpell.words": [
+    "autoincrement",
+    "autorestart",
+    "localtime",
+    "Timestamptz",
+    "zoneinfo"
+  ]
 }

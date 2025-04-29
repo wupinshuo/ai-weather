@@ -33,6 +33,11 @@ WORKDIR /app
 # 安装指定版本的yarn
 RUN npm install -g yarn@1.22.19 --force
 
+# 安装时区数据包并设置时区
+RUN apk add --no-cache tzdata
+ENV TZ Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # 先复制 node_modules
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/build ./build

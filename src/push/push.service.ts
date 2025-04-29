@@ -2,6 +2,13 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { WeatherService } from '../weather/weather.service';
 import { Cron } from '@nestjs/schedule';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+// 扩展 dayjs 功能
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @Injectable()
 export class PushService implements OnModuleInit {
@@ -24,17 +31,17 @@ export class PushService implements OnModuleInit {
   async checkPushTasks() {
     this.logger.debug('检查定时推送任务');
 
-    // 获取当前时间
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
+    // 获取当前北京时间
+    const now = dayjs().tz('Asia/Shanghai');
+    const currentHour = now.hour();
+    const currentMinute = now.minute();
 
     // 计算当前半小时区间
     const halfHourInterval = currentMinute < 30 ? '00' : '30';
     const currentTimePrefix = `${currentHour.toString().padStart(2, '0')}:${halfHourInterval}`;
 
     this.logger.log(
-      `当前时间：${currentTimePrefix}，当前半小时区间：${halfHourInterval}`,
+      `当前时间：${now.format('YYYY-MM-DD HH:mm:ss')}，当前半小时区间：${halfHourInterval}`,
     );
     try {
       // 查找所有启用了推送且推送时间在当前半小时区间内的设置
