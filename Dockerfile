@@ -4,12 +4,14 @@ ARG TARGETPLATFORM=linux/amd64
 # 构建阶段
 FROM --platform=$TARGETPLATFORM node:20-alpine AS builder
 
+# 设置工作目录
 WORKDIR /app
 
 # 设置npm镜像源
 RUN npm config set registry https://registry.npmmirror.com
 RUN yarn config set registry https://registry.npmmirror.com
 
+# 安装yarn
 RUN npm install -g yarn@1.22.19 --force
 
 # 只复制依赖相关文件
@@ -42,6 +44,8 @@ COPY prisma ./prisma
 # 再复制其他源码
 COPY . .
 
+# 端口
 EXPOSE 8081
 
+# 启动
 CMD ["node", "build/src/main.js"]

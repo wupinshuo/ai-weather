@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { aiService } from '../../api/ai';
 import { EmailService } from './email.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,10 +6,15 @@ import { Weather } from '@prisma/client';
 
 @Injectable()
 export class WeatherService {
+  private readonly logger = new Logger(WeatherService.name);
   public constructor(
     private readonly emailService: EmailService,
     private readonly prismaService: PrismaService,
   ) {}
+
+  onModuleInit() {
+    this.logger.log('天气服务已初始化');
+  }
 
   /**
    * 查询Prisma中的weather数据
@@ -39,10 +44,12 @@ export class WeatherService {
   }
 
   /**
-   * 调用ai接口查询今日天气情况
+   * 调用ai接口查询今日天气情况 推送并保存到数据库
    * @param location 查询地点 默认：广东省广州市天河区
    */
-  public async getWeatherByAi(location: string = '广东省广州市天河区') {
+  public async getWeatherByAiSendEmailAndSave(
+    location: string = '广东省广州市天河区',
+  ) {
     const data = await aiService.getWeatherByLocation(location);
     if (!data) return '天气数据异常';
     // 解析数据

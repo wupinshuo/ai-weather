@@ -17,6 +17,7 @@ model User {
   area      String?   /// 所在地区
   createdAt DateTime? @default(now()) /// 创建时间
   updatedAt DateTime? @updatedAt /// 更新时间
+  weatherPushSettings WeatherPushSetting[]
 }
 
 /// 天气信息模型
@@ -36,6 +37,18 @@ model Weather {
   air_quality_index String /// 空气质量指数
   live_tips         String /// 生活提示
   tips              String /// 天气提示
+}
+
+/// 天气推送设置模型
+model WeatherPushSetting {
+  id              Int      @id @default(autoincrement()) /// 设置ID，自增主键
+  userId          Int      /// 用户ID
+  user            User     @relation(fields: [userId], references: [id]) /// 关联用户
+  enablePush      Boolean  @default(true) /// 是否启用推送
+  pushTime        String   /// 推送时间，格式为 HH:mm
+  lastPushAt      DateTime? /// 最后一次推送时间
+  createdAt       DateTime @default(now()) /// 创建时间
+  updatedAt       DateTime @updatedAt /// 更新时间
 }
 
 /// 黄金价格模型

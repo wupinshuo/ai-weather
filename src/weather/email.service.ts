@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EmailEnabled } from '../../decorators/email-enabled.decorator';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 @EmailEnabled
 export class EmailService {
+  private readonly logger = new Logger(EmailService.name);
   private transporter: nodemailer.Transporter;
 
   /** SMTP邮箱 */
@@ -26,6 +27,10 @@ export class EmailService {
         pass: this.smtpPassword,
       },
     });
+  }
+
+  onModuleInit() {
+    this.logger.log('邮件服务已初始化');
   }
 
   /**

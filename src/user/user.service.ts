@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { BaseResponse } from 'types/base';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
   constructor(private readonly prismaService: PrismaService) {}
+
+  onModuleInit() {
+    this.logger.log('用户服务已初始化');
+  }
 
   /**
    * 通过用户ID查询用户信息
@@ -13,6 +18,7 @@ export class UserService {
    * @returns 用户信息
    */
   public async getUserById(userId: string): Promise<BaseResponse<User>> {
+    this.logger.log(`查询用户 ${userId} 信息`);
     if (!userId) return null;
     const userIdNum = Number(userId);
     if (isNaN(userIdNum)) return null;

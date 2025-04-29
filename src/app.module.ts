@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { WeatherModule } from './weather/weather.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
+import { PushModule } from './push/push.module';
+
 @Module({
   imports: [
     PrismaModule,
@@ -13,6 +15,7 @@ import { UserModule } from './user/user.module';
     }),
     WeatherModule,
     UserModule,
+    PushModule,
   ],
   controllers: [AppController],
   providers: [AppService],

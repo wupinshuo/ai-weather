@@ -8,6 +8,6 @@ import { PrismaModule } from '../prisma/prisma.module';
   imports: [PrismaModule],
   controllers: [WeatherController],
   providers: [WeatherService, EmailService],
-  exports: [EmailService],
+  exports: [WeatherService, EmailService],
 })
 export class WeatherModule {}
