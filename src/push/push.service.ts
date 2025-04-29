@@ -2,13 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { WeatherService } from '../weather/weather.service';
 import { Cron } from '@nestjs/schedule';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-
-// 扩展 dayjs 功能
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { timeTool } from '../../tools/time-tool';
 
 @Injectable()
 export class PushService implements OnModuleInit {
@@ -32,16 +26,16 @@ export class PushService implements OnModuleInit {
     this.logger.debug('检查定时推送任务');
 
     // 获取当前北京时间
-    const now = dayjs().tz('Asia/Shanghai');
-    const currentHour = now.hour();
-    const currentMinute = now.minute();
+    const now = timeTool.getChinaTimeDate();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
 
     // 计算当前半小时区间
     const halfHourInterval = currentMinute < 30 ? '00' : '30';
     const currentTimePrefix = `${currentHour.toString().padStart(2, '0')}:${halfHourInterval}`;
 
     this.logger.log(
-      `当前时间：${now.format('YYYY-MM-DD HH:mm:ss')}，当前半小时区间：${halfHourInterval}`,
+      `当前时间：${now}, currentTimePrefix: ${currentTimePrefix}`,
     );
     try {
       // 查找所有启用了推送且推送时间在当前半小时区间内的设置
@@ -76,7 +70,7 @@ export class PushService implements OnModuleInit {
   private async scheduleUserPushTasks(pushSettings: any[]) {
     if (!pushSettings || pushSettings.length === 0) return;
 
-    const now = new Date();
+    const now = timeTool.getChinaTimeDate();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
 
@@ -84,6 +78,8 @@ export class PushService implements OnModuleInit {
       try {
         const user = setting.user;
         if (!user || !user.email || !setting.pushTime) continue;
+
+        this.logger.log(`调度用户 ${user.id} 的推送任务为 ${setting}`);
 
         // 解析推送时间
         const [hourStr, minuteStr] = setting.pushTime.split(':');
@@ -121,7 +117,7 @@ export class PushService implements OnModuleInit {
                 // 更新推送设置的最后推送时间
                 await this.prismaService.weatherPushSetting.update({
                   where: { id: setting.id },
-                  data: { lastPushAt: new Date() },
+                  data: { lastPushAt: timeTool.getChinaTimeDate() },
                 });
               } else {
                 this.logger.debug(`用户 ${user.id} 今天已经推送过天气信息`);
@@ -144,8 +140,8 @@ export class PushService implements OnModuleInit {
   private isPushedToday(lastPushAt: Date | null): boolean {
     if (!lastPushAt) return false;
 
-    const now = new Date();
-    const lastPush = new Date(lastPushAt);
+    const now = timeTool.getChinaTimeDate();
+    const lastPush = timeTool.getChinaTimeDate(lastPushAt);
 
     return (
       lastPush.getFullYear() === now.getFullYear() &&
