@@ -7,7 +7,7 @@ export class WeatherController {
 
   @Get()
   public async getWeather() {
-    return await this.weatherService.getWeatherByAiSendEmailAndSave();
+    return await this.weatherService.getWeatherByAiPushEmailAndSave();
   }
 
   @Get('prisma/get')

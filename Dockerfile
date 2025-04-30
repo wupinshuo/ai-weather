@@ -14,9 +14,8 @@ RUN yarn config set registry https://registry.npmmirror.com
 # 安装yarn
 RUN npm install -g yarn@1.22.19 --force
 
-# 只复制依赖相关文件
-COPY package.json yarn.lock tsconfig.json ./
-COPY prisma ./prisma
+# 复制所有项目文件
+COPY . .
 
 # 安装依赖
 RUN yarn install --frozen-lockfile
@@ -38,16 +37,11 @@ RUN apk add --no-cache tzdata
 ENV TZ Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# 先复制 node_modules
+# 复制构建产物和必要文件
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/build ./build
-
-COPY package*.json ./
-COPY yarn.lock ./
-COPY prisma ./prisma
-
-# 再复制其他源码
-COPY . .
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/prisma ./prisma
 
 # 端口
 EXPOSE 8081

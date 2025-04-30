@@ -79,19 +79,24 @@ export class PushService implements OnModuleInit {
         const user = setting.user;
         if (!user || !user.email || !setting.pushTime) continue;
 
-        this.logger.log(`调度用户 ${user.id} 的推送任务为 ${setting}`);
+        this.logger.log(
+          `调度用户 ${user.id} 的推送任务为: ${JSON.stringify(setting)}`,
+        );
 
         // 解析推送时间
         const [hourStr, minuteStr] = setting.pushTime.split(':');
         const pushHour = parseInt(hourStr, 10);
         const pushMinute = parseInt(minuteStr, 10);
 
-        // 如果推送时间小时匹配当前小时，且分钟在当前半小时区间内，或者上次推送时间不是今天
+        this.logger.log(
+          `pushHour: ${pushHour}, currentHour: ${currentHour}, pushMinute: ${pushMinute}, currentMinute: ${currentMinute}`,
+        );
+
+        // 如果推送时间小时匹配当前小时，且分钟在当前半小时区间内
         if (
           pushHour === currentHour &&
           ((currentMinute < 30 && pushMinute < 30) ||
-            (currentMinute >= 30 && pushMinute >= 30)) &&
-          !this.isPushedToday(setting.lastPushAt)
+            (currentMinute >= 30 && pushMinute >= 30))
         ) {
           // 计算延迟时间（毫秒）
           const delayMs = (pushMinute - currentMinute) * 60 * 1000;
@@ -103,16 +108,13 @@ export class PushService implements OnModuleInit {
 
           setTimeout(
             async () => {
-              // 再次检查，避免重复推送
+              // 再次检查
               const updatedSetting =
                 await this.prismaService.weatherPushSetting.findUnique({
                   where: { id: setting.id },
                 });
 
-              if (
-                updatedSetting &&
-                !this.isPushedToday(updatedSetting.lastPushAt)
-              ) {
+              if (updatedSetting) {
                 await this.pushWeatherToUser(user.id);
                 // 更新推送设置的最后推送时间
                 await this.prismaService.weatherPushSetting.update({
@@ -120,7 +122,9 @@ export class PushService implements OnModuleInit {
                   data: { lastPushAt: timeTool.getChinaTimeDate() },
                 });
               } else {
-                this.logger.debug(`用户 ${user.id} 今天已经推送过天气信息`);
+                this.logger.debug(
+                  `用户 ${user.id} ${user.name} 推送设置不存在`,
+                );
               }
             },
             Math.max(0, delayMs),
@@ -143,6 +147,9 @@ export class PushService implements OnModuleInit {
     const now = timeTool.getChinaTimeDate();
     const lastPush = timeTool.getChinaTimeDate(lastPushAt);
 
+    this.logger.log(
+      `lastPush: ${lastPush}, now: ${now}, lastPush.getFullYear(): ${lastPush.getFullYear()}, now.getFullYear(): ${now.getFullYear()}`,
+    );
     return (
       lastPush.getFullYear() === now.getFullYear() &&
       lastPush.getMonth() === now.getMonth() &&
@@ -168,8 +175,14 @@ export class PushService implements OnModuleInit {
 
       // 获取用户所在地区的天气信息
       const location = `${user.province}${user.area}`;
+      // 查询天气数据并推送用户
       const weatherData =
-        await this.weatherService.getWeatherByAiSendEmailAndSave(location);
+        await this.weatherService.getWeatherByAiPushEmailAndSave(
+          location,
+          user.name || '',
+          user.email || '',
+        );
+
       return weatherData;
     } catch (error) {
       this.logger.error(`向用户 ${userId} 推送天气信息失败`, error);

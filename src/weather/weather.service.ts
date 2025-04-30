@@ -3,6 +3,7 @@ import { aiService } from '../../api/ai';
 import { EmailService } from './email.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Weather } from '@prisma/client';
+import { BaseResponse } from 'types/base';
 
 @Injectable()
 export class WeatherService {
@@ -44,20 +45,25 @@ export class WeatherService {
   }
 
   /**
-   * 调用ai接口查询今日天气情况 推送并保存到数据库
+   * 调用ai接口查询今日天气情况, 发送邮件并保存到数据库
    * @param location 查询地点 默认：广东省广州市天河区
+   * @param userName 发送邮件的名称 默认：吴帅
+   * @param email 发送邮件的邮箱 默认：123456789@qq.com
    */
-  public async getWeatherByAiSendEmailAndSave(
+  public async getWeatherByAiPushEmailAndSave(
     location: string = '广东省广州市天河区',
-  ) {
+    userName: string = '吴帅',
+    email: string = '123456789@qq.com',
+  ): Promise<BaseResponse<string>> {
     const data = await aiService.getWeatherByLocation(location);
-    if (!data) return '天气数据异常';
+    if (!data) return null;
     // 解析数据
     const weatherData = JSON.parse(data || '{}') as Weather;
+    if (!weatherData) return null;
 
     // 发送邮件
     const html = `
-      <h1>早上好，吴帅</h1>
+      <h1>早上好，${userName}</h1>
       <h2>以下是${weatherData.weather_date} ${weatherData.province}${weatherData.area}的天气情况：</h2>
 
       <p>今天天气: ${weatherData.weather_condition}</p>
@@ -75,10 +81,10 @@ export class WeatherService {
     `;
 
     // 发送邮件
-    this.emailService.sendEmail('今日天气情况', html);
+    this.emailService.sendEmail('今日天气情况', html, email);
     // 新增数据到数据库
-    this.createWeatherByPrisma(weatherData);
+    await this.createWeatherByPrisma(weatherData);
 
-    return data;
+    return html;
   }
 }
