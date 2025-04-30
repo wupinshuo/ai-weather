@@ -37,11 +37,8 @@ RUN apk add --no-cache tzdata
 ENV TZ Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# 复制构建产物和必要文件
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/prisma ./prisma
+# 从builder阶段复制构建后的产物
+COPY --from=builder /app ./
 
 # 端口
 EXPOSE 8081
