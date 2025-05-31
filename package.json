@@ -1,8 +1,8 @@
 {
   "name": "ai-weather",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "ai天气服务",
+  "author": "tushan",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
