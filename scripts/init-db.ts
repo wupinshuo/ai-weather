@@ -1,6 +1,6 @@
 import { PrismaClient, User } from '@prisma/client';
-const prisma = new PrismaClient();
 import * as dotenv from 'dotenv';
+const prisma = new PrismaClient();
 
 // 加载环境变量
 dotenv.config();

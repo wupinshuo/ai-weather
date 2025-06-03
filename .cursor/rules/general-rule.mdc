@@ -1,0 +1,68 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 项目开发规范
+
+## 核心开发原则
+1. 代码语言规范
+    - 所有新代码使用 TypesScript
+    - 严格遵循 TypeScript 的类型系统
+    - 避免使用 any 类型，除非必要
+2. 异步编程规范
+    - 优先使用 async/await 语法
+    - 避免使用回调函数 (callback)
+    - 正确使用 Promise 链和错误处理
+3. 代码注释规范
+    - 保留原有代码注释
+    - 新代码尽可能添加响应的注释
+    - 注释要清晰、准确、及时更新
+4. 错误处理规范
+    - 所有新方法必须包含错误处理
+    - 使用 try-catch 块捕获异常
+    - 实现适当的错误日志记录
+    - 提供有意义的错误信息
+5. 目录结构
+    - 数据结构类型放在 `types/` 下
+    - 常量放在 `constants/` 下
+    - 工具类函数放在 `tools/` 下
+    - 外部调用的api服务放在 `api/` 下
+
+## 技术栈规范
+1. 使用 NestJS 框架进行后端开发
+   - 遵循 NestJS 的模块化架构设计
+   - 使用依赖注入进行服务管理
+2. 使用 pnpm 作为包管理工具
+3. nodejs版本为 20.16.0 
+5. 日志输出一般使用 @nestjs/common 的 Logger模块
+
+## 代码风格规范
+1. 使用 Prettier 进行代码格式化
+   - 配置文件：.prettierrc
+   - 忽略文件：.prettierignore
+   - 运行命令：pnpm prettier
+2. 使用 ESLint 进行代码质量检查
+   - 使用 @typescript-eslint 插件
+   - 集成 Prettier 配置
+   - 遵循 Airbnb 代码风格指南
+3. 命名规范
+   - 文件名：使用 kebab-case（如：user-service.ts）
+   - 类名：使用 PascalCase（如：UserService）
+   - 变量和函数：使用 camelCase（如：getUserData）
+   - 常量：使用 UPPER_SNAKE_CASE（如：MAX_RETRY_COUNT）
+4. 注释规范
+   - 使用 JSDoc 格式编写注释
+   - 为公共 API 添加完整的文档注释
+   - 为复杂的业务逻辑添加必要的说明注释
+5. 其他
+   - Git 提交信息建议遵循 Conventional Commits 规范
+
+## TypeScript 规范
+1. 类型定义
+   - 避免使用 any 类型
+   - 优先使用接口（interface）定义数据结构
+   - 使用类型别名（type）定义联合类型
+   - 为所有函数参数和返回值定义类型
+
+   
