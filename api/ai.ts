@@ -13,8 +13,8 @@ class AiService {
   /** ai model */
   private model = process.env.ARK_MODEL as string;
 
-  /** ai 天气服务 */
-  public aiWeatherService = axios.create({
+  /** deepseek ai 服务 */
+  public deepseekAiService = axios.create({
     baseURL: this.baseUrl,
     headers: {
       'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ class AiService {
     };
 
     try {
-      const res = await this.aiWeatherService.post(
+      const res = await this.deepseekAiService.post(
         '/api/v3/bots/chat/completions',
         data,
       );
@@ -98,6 +98,78 @@ class AiService {
       return messageData;
     } catch (error) {
       console.error('Error fetching weather data:', error);
+      return '';
+    }
+  }
+
+  /**
+   * @description: 获取每日一签信息
+   * @return {string} 每日一签信息
+   */
+  public async getDailySign(): Promise<string> {
+    /** prompt提示词 */
+    const prompt = `
+    你是一位精通周易与古典诗词的签文大师，能够根据用户输入的日期，生成一条符合以下要求的每日签文：
+
+【格式要求】
+1. 签文主体：原创或改编自经典诗词的2句或者4句对仗诗句（7言或5言）
+2. 解读部分：包含3个要素（今日运势关键词 + 具体建议 + 文化典故出处提示）
+3. 风格：保持唐代签诗风格，用词典雅含蓄
+
+【内容要素】
+- 运势方向：{{随机选择: 事业/姻缘/健康/财运/人际}}
+- 意象元素：{{随机选择2-3个: 明月/松柏/鲲鹏/锦鲤/莲花/鸿雁/金鳞/瑶琴}}
+- 节气关联：{{当前节气}}（如非重要节气则忽略）
+
+【输出示例】
+ '''json
+        {
+         "sign": <签文 如：玉露金风逢吉日，云开月朗照前程>,
+         "explain": <签文解读 如：此签寓意着在金风玉露的时节，云开月朗，预示着前程光明，适合积极行动，把握机遇。>,
+         "fortune": <运势 如：事业通达>,
+         "tip": <建议 如：宜决策新项目，忌犹豫不决>,
+         "source": <典出 如：《淮南子》"时之反侧，间不容息">,
+         "season": <节气 如：霜降>,
+         "date": <日期 如：2025-06-03>
+        }
+        '''
+    `;
+
+    // 获取当前日期
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const dateStr = `${year}-${month}-${day}`;
+
+    /** 请求体 */
+    const data = {
+      model: this.model,
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: dateStr },
+      ],
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 200,
+    };
+
+    try {
+      const res = await this.deepseekAiService.post(
+        '/api/v3/bots/chat/completions',
+        data,
+      );
+      // 接口返回数据
+      const message: string = res.data?.choices?.[0]?.message?.content ?? '';
+      console.log('原始每日一签数据', message);
+
+      // 提取出 ```json 与 ``` 之间的数据
+      const messageData =
+        message.match(/```json([\s\S]*)```/)?.[1]?.trim() || '';
+      console.log('解析出的每日一签数据', messageData);
+      return messageData;
+    } catch (error) {
+      console.error('Error fetching daily sign:', error);
       return '';
     }
   }

@@ -35,4 +35,9 @@ export class WeatherController {
       tips: '记得携带伞和太阳镜。',
     });
   }
+
+  @Get('daily-sign')
+  public async getDailySign() {
+    return await this.weatherService.getDailySign();
+  }
 }

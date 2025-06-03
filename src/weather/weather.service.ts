@@ -87,4 +87,13 @@ export class WeatherService {
 
     return html;
   }
+
+  /**
+   * 获取每日一签信息
+   * @returns 每日一签信息
+   */
+  public async getDailySign(): Promise<string> {
+    const data = await aiService.getDailySign();
+    return data;
+  }
 }
