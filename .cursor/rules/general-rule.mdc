@@ -35,7 +35,8 @@ alwaysApply: true
    - 使用依赖注入进行服务管理
 2. 使用 pnpm 作为包管理工具
 3. nodejs版本为 20.16.0 
-5. 日志输出一般使用 @nestjs/common 的 Logger模块
+4. 日志输出一般使用 @nestjs/common 的 Logger模块
+5. 数据库使用postgresql，数据库ORM工具使用prisma
 
 ## 代码风格规范
 1. 使用 Prettier 进行代码格式化
