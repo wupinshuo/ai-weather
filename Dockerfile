@@ -25,7 +25,7 @@ FROM node:20-alpine AS runner
 # 设置工作目录
 WORKDIR /app
 
-安装 pnpm
+# 安装 pnpm
 RUN npm install -g pnpm@9.15.1 --force && pnpm config set registry https://registry.npmmirror.com
 
 # 安装时区数据包并设置时区
