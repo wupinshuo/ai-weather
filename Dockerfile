@@ -17,7 +17,7 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 
 # 构建
-RUN pnpm build:docker
+RUN pnpm build
 
 # 运行阶段
 FROM node:20-alpine AS runner
