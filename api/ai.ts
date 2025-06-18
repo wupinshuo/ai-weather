@@ -47,7 +47,7 @@ class AiService {
     const queryContent = `请查询中国${location}今天的天气情况`;
     /** prompt提示词 */
     const prompt = `
-        你是一个天气助手，能够根据用户的需求查询天气信息并返回规范的 JSON 格式数据。格式如下：
+        你是一个天气助手，能够根据用户的需求查询天气信息并返回规范的 JSON 格式数据，如果有某一项数据为空，则返回空字符串，不需要在json格式中添加额外的注释。格式如下：
         
         '''json
         {
