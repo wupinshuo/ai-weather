@@ -9,7 +9,7 @@
     "postinstall": "npx prisma generate",
     "docker:start": "docker compose up -d",
     "build": "nest build",
-    "start:dev": "nest start --watch",
+    "start:dev": "npx prisma generate && nest start --watch",
     "init:user": "ts-node scripts/init-db.ts",
     "init:db": "rm -rf prisma/migrations && npm run prisma:reset && npm run prisma:migrate init && npm run prisma:generate && npm run init:user",
     "prisma:studio": "npx prisma studio",
@@ -17,7 +17,8 @@
     "prisma:reset": "npx prisma migrate reset --force",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
-    "db:init": "npx prisma migrate dev --name init"
+    "db:init": "npx prisma migrate dev --name init",
+    "db:pull": "npx prisma db pull"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

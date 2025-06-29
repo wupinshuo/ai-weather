@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { aiService } from '../../api/ai';
 import { EmailService } from './email.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { Weather } from '@prisma/client';
+import { weather } from '@prisma/client';
 import { BaseResponse } from 'types/base';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class WeatherService {
   /**
    * 新增Prisma中的weather数据
    */
-  public async createWeatherByPrisma(weather: Weather) {
+  public async createWeatherByPrisma(weather: weather) {
     const data = await this.prismaService.weather.create({
       data: {
         ...weather,
@@ -58,7 +58,7 @@ export class WeatherService {
     const data = await aiService.getWeatherByLocation(location);
     if (!data) return null;
     // 解析数据
-    const weatherData = JSON.parse(data || '{}') as Weather;
+    const weatherData = JSON.parse(data || '{}') as weather;
     if (!weatherData) return null;
 
     // 发送邮件

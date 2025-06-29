@@ -40,10 +40,10 @@ export class PushService implements OnModuleInit {
     try {
       // 查找所有启用了推送且推送时间在当前半小时区间内的设置
       const pushSettingsToNotify =
-        await this.prismaService.weatherPushSetting.findMany({
+        await this.prismaService.weather_push_setting.findMany({
           where: {
-            enablePush: true,
-            pushTime: {
+            enable_push: true,
+            push_time: {
               startsWith: currentTimePrefix,
             },
           },
@@ -110,16 +110,16 @@ export class PushService implements OnModuleInit {
             async () => {
               // 再次检查
               const updatedSetting =
-                await this.prismaService.weatherPushSetting.findUnique({
+                await this.prismaService.weather_push_setting.findUnique({
                   where: { id: setting.id },
                 });
 
               if (updatedSetting) {
                 await this.pushWeatherToUser(user.id);
                 // 更新推送设置的最后推送时间
-                await this.prismaService.weatherPushSetting.update({
+                await this.prismaService.weather_push_setting.update({
                   where: { id: setting.id },
-                  data: { lastPushAt: timeTool.getChinaTimeDate() },
+                  data: { last_push_at: timeTool.getChinaTimeDate() },
                 });
               } else {
                 this.logger.debug(
@@ -164,7 +164,7 @@ export class PushService implements OnModuleInit {
   async pushWeatherToUser(userId: number) {
     try {
       // 获取用户信息
-      const user = await this.prismaService.user.findUnique({
+      const user = await this.prismaService.users.findUnique({
         where: { id: userId },
       });
 
@@ -204,27 +204,27 @@ export class PushService implements OnModuleInit {
       });
       // 先查找是否存在相同的设置
       const existingSetting =
-        await this.prismaService.weatherPushSetting.findFirst({
+        await this.prismaService.weather_push_setting.findFirst({
           where: {
-            userId,
-            pushTime,
+            user_id: userId,
+            push_time: pushTime,
           },
         });
 
       let setting;
       if (existingSetting) {
         // 如果存在则更新
-        setting = await this.prismaService.weatherPushSetting.update({
+        setting = await this.prismaService.weather_push_setting.update({
           where: { id: existingSetting.id },
-          data: { enablePush },
+          data: { enable_push: enablePush },
         });
       } else {
         // 如果不存在则创建
-        setting = await this.prismaService.weatherPushSetting.create({
+        setting = await this.prismaService.weather_push_setting.create({
           data: {
-            userId,
-            enablePush,
-            pushTime,
+            user_id: userId,
+            enable_push: enablePush,
+            push_time: pushTime,
           },
         });
       }
@@ -243,7 +243,7 @@ export class PushService implements OnModuleInit {
     try {
       this.logger.log(`获取用户 ${userId} 的推送设置`);
       // 获取用户信息
-      const user = await this.prismaService.user.findUnique({
+      const user = await this.prismaService.users.findUnique({
         where: { id: userId },
         select: {
           id: true,
@@ -256,17 +256,15 @@ export class PushService implements OnModuleInit {
 
       this.logger.log(`获取用户 ${userId} 信息成功`, user);
       // 获取用户的推送设置
-      const pushSettings = await this.prismaService.weatherPushSetting.findMany(
-        {
-          where: { userId },
+      const pushSettings =
+        await this.prismaService.weather_push_setting.findMany({
+          where: { user_id: userId },
           select: {
             id: true,
-            enablePush: true,
-            pushTime: true,
-            lastPushAt: true,
+            enable_push: true,
+            push_time: true,
           },
-        },
-      );
+        });
 
       this.logger.log(`获取用户 ${userId} 推送设置成功`, pushSettings);
       return {

@@ -8,54 +8,88 @@ datasource db {
 }
 
 /// 用户模型
-model User {
-  id        Int       @id @default(autoincrement()) /// 用户ID，自增主键
-  name      String?   /// 用户名称
-  email     String?   @unique /// 用户邮箱，唯一
-  image     String?   /// 用户头像
-  province  String?   /// 所在省份
-  area      String?   /// 所在地区
-  createdAt DateTime? @default(now()) /// 创建时间
-  updatedAt DateTime? @updatedAt /// 更新时间
-  weatherPushSettings WeatherPushSetting[]
+model users {
+  /// 用户ID，自增主键
+  id                  Int                  @id @default(autoincrement())
+  /// 用户名称
+  name                String?
+  /// 用户邮箱，唯一
+  email               String?              @unique
+  /// 用户头像
+  image               String?
+  /// 所在省份
+  province            String?
+  /// 所在地区
+  area                String?
+  /// 创建时间
+  created_at          DateTime?            @default(now())
+  /// 更新时间
+  updated_at          DateTime?            @updatedAt
+  weather_push_settings weather_push_setting[]
 }
 
 /// 天气信息模型
-model Weather {
-  id                Int    @id @default(autoincrement()) /// 天气记录ID，自增主键
-  province          String /// 省份
-  area              String /// 地区
-  weather_date      String /// 天气日期
-  timestamp         Int    /// 时间戳
-  weather_condition String /// 天气状况
-  temperature       String /// 当前温度
-  temperature_range String /// 温度范围
-  wind              String /// 风力风向
-  precipitation     String /// 降水量
-  humidity          String /// 湿度
-  air_quality       String /// 空气质量描述
-  air_quality_index String /// 空气质量指数
-  live_tips         String /// 生活提示
-  tips              String /// 天气提示
+model weather {
+  /// 天气记录ID，自增主键
+  id                Int    @id @default(autoincrement())
+  /// 省份
+  province          String
+  /// 地区
+  area              String
+  /// 天气日期
+  weather_date      String
+  /// 时间戳
+  timestamp         Int
+  /// 天气状况
+  weather_condition String
+  /// 当前温度
+  temperature       String
+  /// 温度范围
+  temperature_range String
+  /// 风力风向
+  wind              String
+  /// 降水量
+  precipitation     String
+  /// 湿度
+  humidity          String
+  /// 空气质量描述
+  air_quality       String
+  /// 空气质量指数
+  air_quality_index String
+  /// 生活提示
+  live_tips         String
+  /// 天气提示
+  tips              String
 }
 
 /// 天气推送设置模型
-model WeatherPushSetting {
-  id              Int      @id @default(autoincrement()) /// 设置ID，自增主键
-  userId          Int      /// 用户ID
-  user            User     @relation(fields: [userId], references: [id]) /// 关联用户
-  enablePush      Boolean  @default(true) /// 是否启用推送
-  pushTime        String   /// 推送时间，格式为 HH:mm
-  lastPushAt      DateTime? /// 最后一次推送时间
-  createdAt       DateTime @default(now()) /// 创建时间
-  updatedAt       DateTime @updatedAt /// 更新时间
+model weather_push_setting {
+  /// 设置ID，自增主键
+  id         Int       @id @default(autoincrement())
+  /// 用户ID
+  user_id     Int
+  /// 是否启用推送
+  enable_push Boolean   @default(true)
+  /// 推送时间，格式为 HH:mm
+  push_time   String
+  /// 创建时间
+  created_at  DateTime  @default(now())
+  /// 更新时间
+  updated_at  DateTime  @updatedAt
+  /// 最后一次推送时间
+  last_push_at DateTime?
+  user       users      @relation(fields: [user_id], references: [id])
 }
 
 /// 黄金价格模型
 model gold {
-  id    Int      @id @default(autoincrement()) /// 记录ID，自增主键
-  gid   String   @db.VarChar(50) /// 黄金商品ID，唯一标识
-  name  String   @db.VarChar(100) /// 黄金商品名称
-  time  DateTime @db.Timestamp(3) /// 价格记录时间
-  price Decimal  @db.Decimal(10, 2) /// 黄金价格，精确到2位小数
+  /// 记录ID，自增主键
+  id      Int      @id @default(autoincrement())
+  gold_id String   @db.VarChar(50)
+  /// 黄金商品名称
+  name    String   @db.VarChar(100)
+  /// 价格记录时间
+  time    DateTime
+  /// 黄金价格，精确到2位小数
+  price   Decimal  @db.Decimal(10, 2)
 }

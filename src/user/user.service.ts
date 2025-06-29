@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { users } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { BaseResponse } from 'types/base';
 
@@ -17,12 +17,12 @@ export class UserService {
    * @param userId 用户ID
    * @returns 用户信息
    */
-  public async getUserById(userId: string): Promise<BaseResponse<User>> {
+  public async getUserById(userId: string): Promise<BaseResponse<users>> {
     this.logger.log(`查询用户 ${userId} 信息`);
     if (!userId) return null;
     const userIdNum = Number(userId);
     if (isNaN(userIdNum)) return null;
-    const data = await this.prismaService.user.findFirst({
+    const data = await this.prismaService.users.findFirst({
       where: {
         id: userIdNum,
       },
@@ -35,10 +35,12 @@ export class UserService {
    * @param user 用户信息
    * @returns 添加结果
    */
-  public async createUser(user: Omit<User, 'id'>): Promise<BaseResponse<User>> {
+  public async createUser(
+    user: Omit<users, 'id'>,
+  ): Promise<BaseResponse<users>> {
     if (!user) return null;
 
-    const data = await this.prismaService.user.create({
+    const data = await this.prismaService.users.create({
       data: user,
     });
     return data;

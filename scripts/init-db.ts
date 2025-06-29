@@ -1,4 +1,4 @@
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient, users } from '@prisma/client';
 import * as dotenv from 'dotenv';
 const prisma = new PrismaClient();
 
@@ -9,7 +9,7 @@ dotenv.config();
 const main = async () => {
   const time = new Date();
   console.log('开始初始化数据库', time);
-  const users: User[] = [
+  const users: users[] = [
     {
       id: 1,
       name: process.env.ADMIN_USERNAME || 'admin',
@@ -17,12 +17,12 @@ const main = async () => {
       image: '',
       province: '广东省',
       area: '广州市天河区',
-      createdAt: time,
-      updatedAt: time,
+      created_at: time,
+      updated_at: time,
     },
   ];
   for (const user of users) {
-    await prisma.user.create({
+    await prisma.users.create({
       data: user,
     });
   }

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { BaseResponse, ReturnData } from 'types/base';
-import { User } from '@prisma/client';
+import { users } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -10,7 +10,7 @@ export class UserController {
   @Get('/:userId')
   public async getUserById(
     @Param('userId') userId: string,
-  ): Promise<ReturnData<BaseResponse<User>>> {
+  ): Promise<ReturnData<BaseResponse<users>>> {
     try {
       const user = await this.userService.getUserById(userId);
       if (!user) {
@@ -39,8 +39,8 @@ export class UserController {
 
   @Post('/create')
   public async createUser(
-    @Body() body: Omit<User, 'id'>,
-  ): Promise<ReturnData<BaseResponse<User>>> {
+    @Body() body: Omit<users, 'id'>,
+  ): Promise<ReturnData<BaseResponse<users>>> {
     try {
       console.log('新增用户信息', body);
       // 参数校验
