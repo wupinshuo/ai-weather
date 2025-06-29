@@ -6,6 +6,9 @@ import { WeatherModule } from './weather/weather.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { PushModule } from './push/push.module';
+import { GoldModule } from './gold/gold.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ToolsModule } from './tools/tools.module';
 
 @Module({
   imports: [
@@ -13,6 +16,9 @@ import { PushModule } from './push/push.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
+    GoldModule,
+    ToolsModule,
     WeatherModule,
     UserModule,
     PushModule,

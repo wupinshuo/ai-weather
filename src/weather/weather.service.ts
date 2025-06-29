@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { aiService } from '../../api/ai';
-import { EmailService } from './email.service';
+import { EmailService } from '../tools/email.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { weather } from '@prisma/client';
 import { BaseResponse } from 'types/base';

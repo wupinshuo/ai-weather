@@ -18,7 +18,8 @@
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
     "db:init": "npx prisma migrate dev --name init",
-    "db:pull": "npx prisma db pull"
+    "db:pull": "npx prisma db pull",
+    "docker:clear": "docker system prune -a -f --volumes"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

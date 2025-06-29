@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 import { WeatherController } from './weather.controller';
-import { EmailService } from './email.service';
+import { EmailService } from '../tools/email.service';
 import { PrismaModule } from '../prisma/prisma.module';
+import { ToolsModule } from '../tools/tools.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, ToolsModule],
   controllers: [WeatherController],
-  providers: [WeatherService, EmailService],
-  exports: [WeatherService, EmailService],
+  providers: [WeatherService],
+  exports: [WeatherService],
 })
 export class WeatherModule {}

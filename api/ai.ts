@@ -1,11 +1,14 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { timeTool } from '../tools/time-tool';
+import { Logger } from '@nestjs/common';
 
 // 读取环境变量
 dotenv.config();
 
 class AiService {
+  private logger = new Logger(AiService.name);
+
   /** ai base url */
   private baseUrl = process.env.ARK_BOT_BASE_URL as string;
   /** ai api key */
@@ -37,7 +40,7 @@ class AiService {
     // 记录开始时间(毫秒)
     const startTime = Date.now();
 
-    console.log(
+    this.logger.log(
       '开始查询天气, 位置: %s, 时间: %s',
       location,
       new Date(startTime),
@@ -83,21 +86,21 @@ class AiService {
         data,
       );
       const endTime = Date.now();
-      console.log(
+      this.logger.log(
         '查询天气耗时: ',
         timeTool.formatDuration(endTime - startTime),
       );
       // 接口返回数据
       const message: string = res.data?.choices?.[0]?.message?.content ?? '';
-      console.log('原始天气数据', message);
+      this.logger.log('原始天气数据', message);
 
       // 提取出 ```json 与 ``` 之间的数据
       const messageData =
         message.match(/```json([\s\S]*)```/)?.[1]?.trim() || '';
-      console.log('解析出的天气数据', messageData);
+      this.logger.log('解析出的天气数据', messageData);
       return messageData;
     } catch (error) {
-      console.error('Error fetching weather data:', error);
+      this.logger.error('Error fetching weather data:', error);
       return '';
     }
   }
@@ -161,15 +164,15 @@ class AiService {
       );
       // 接口返回数据
       const message: string = res.data?.choices?.[0]?.message?.content ?? '';
-      console.log('原始每日一签数据', message);
+      this.logger.log('原始每日一签数据', message);
 
       // 提取出 ```json 与 ``` 之间的数据
       const messageData =
         message.match(/```json([\s\S]*)```/)?.[1]?.trim() || '';
-      console.log('解析出的每日一签数据', messageData);
+      this.logger.log('解析出的每日一签数据', messageData);
       return messageData;
     } catch (error) {
-      console.error('Error fetching daily sign:', error);
+      this.logger.error('Error fetching daily sign:', error);
       return '';
     }
   }
