@@ -25,6 +25,7 @@ services:
       - ai-pg
     networks:
       - ai-network
+      - data-harvester-network  # 加入 data-harvester 的网络
 
   ai-pg:
     image: postgres:17.4
@@ -43,6 +44,9 @@ services:
 networks:
   ai-network:
     driver: bridge
+  data-harvester-network:
+    external: true  # 这个网络已存在，不要新建
+    name: data-harvester_data-harvester-network
 
 volumes:
   postgres_data:

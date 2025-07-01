@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
 import { PushController } from './push.controller';
 import { PushService } from './push.service';
 import { WeatherModule } from '../weather/weather.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { GoldModule } from 'src/gold/gold.module';
 
 @Module({
-  imports: [ScheduleModule.forRoot(), WeatherModule, PrismaModule],
+  imports: [WeatherModule, PrismaModule, GoldModule],
   controllers: [PushController],
   providers: [PushService],
-  exports: [PushService],
+  exports: [],
 })
 export class PushModule {}

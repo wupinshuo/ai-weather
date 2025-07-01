@@ -1,11 +1,10 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { TaskService } from './task.service';
+import { Module, Global } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { GoldModule } from '../gold/gold.module';
 
+@Global()
 @Module({
-  imports: [forwardRef(() => GoldModule)],
-  providers: [TaskService, EmailService],
-  exports: [TaskService, EmailService],
+  imports: [],
+  providers: [EmailService],
+  exports: [EmailService],
 })
 export class ToolsModule {}

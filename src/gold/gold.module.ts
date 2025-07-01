@@ -1,10 +1,10 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { GoldController } from './gold.controller';
 import { GoldService } from './gold.service';
 import { ToolsModule } from '../tools/tools.module';
 
 @Module({
-  imports: [forwardRef(() => ToolsModule)],
+  imports: [ToolsModule],
   controllers: [GoldController],
   providers: [GoldService],
   exports: [GoldService],

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { WeatherService } from '../weather/weather.service';
 import { Cron } from '@nestjs/schedule';
 import { timeTool } from '../../tools/time-tool';
+import { GoldService } from 'src/gold/gold.service';
 
 @Injectable()
 export class PushService implements OnModuleInit {
@@ -11,6 +12,7 @@ export class PushService implements OnModuleInit {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly weatherService: WeatherService,
+    private readonly goldService: GoldService,
   ) {}
 
   onModuleInit() {
@@ -61,6 +63,14 @@ export class PushService implements OnModuleInit {
     } catch (error) {
       this.logger.error('定时推送任务执行失败', error);
     }
+  }
+
+  /** 每天早上9点05分更新金价 */
+  @Cron('0 05 09 * * *')
+  public async updateGoldPrice() {
+    this.logger.log(`开始更新金价`);
+    await this.goldService.getGoldPriceByAiPushEmailAndSave();
+    this.logger.log(`金价更新完成`);
   }
 
   /**
