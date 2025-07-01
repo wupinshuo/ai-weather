@@ -4,6 +4,7 @@ import { WeatherService } from '../weather/weather.service';
 import { Cron } from '@nestjs/schedule';
 import { timeTool } from '../../tools/time-tool';
 import { GoldService } from 'src/gold/gold.service';
+import { users, weather_push_setting } from '@prisma/client';
 
 @Injectable()
 export class PushService implements OnModuleInit {
@@ -55,7 +56,7 @@ export class PushService implements OnModuleInit {
         });
 
       this.logger.log(
-        `找到 ${pushSettingsToNotify.length} 个推送设置需要在本半小时内执行`,
+        `找到 ${pushSettingsToNotify.length} 个推送设置需要在本半小时内执行, 推送设置: ${JSON.stringify(pushSettingsToNotify)}`,
       );
 
       // 为匹配的设置执行推送任务调度
@@ -77,7 +78,9 @@ export class PushService implements OnModuleInit {
    * 为用户调度推送任务
    * @param pushSettings 需要推送的设置列表
    */
-  private async scheduleUserPushTasks(pushSettings: any[]) {
+  private async scheduleUserPushTasks(
+    pushSettings: (weather_push_setting & { user: users })[],
+  ) {
     if (!pushSettings || pushSettings.length === 0) return;
 
     const now = timeTool.getChinaTimeDate();
@@ -87,14 +90,14 @@ export class PushService implements OnModuleInit {
     for (const setting of pushSettings) {
       try {
         const user = setting.user;
-        if (!user || !user.email || !setting.pushTime) continue;
+        if (!user || !user.email || !setting.push_time) continue;
 
         this.logger.log(
           `调度用户 ${user.id} 的推送任务为: ${JSON.stringify(setting)}`,
         );
 
         // 解析推送时间
-        const [hourStr, minuteStr] = setting.pushTime.split(':');
+        const [hourStr, minuteStr] = setting.push_time.split(':');
         const pushHour = parseInt(hourStr, 10);
         const pushMinute = parseInt(minuteStr, 10);
 
