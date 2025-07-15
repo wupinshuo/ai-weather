@@ -26,7 +26,7 @@ export class PushService implements OnModuleInit {
    */
   @Cron('0 */30 * * * *')
   async checkPushTasks() {
-    this.logger.debug('检查定时推送任务');
+    // this.logger.debug('检查定时推送任务');
 
     // 获取当前北京时间
     const now = timeTool.getChinaTimeDate();
@@ -37,9 +37,9 @@ export class PushService implements OnModuleInit {
     const halfHourInterval = currentMinute < 30 ? '00' : '30';
     const currentTimePrefix = `${currentHour.toString().padStart(2, '0')}:${halfHourInterval}`;
 
-    this.logger.log(
-      `当前时间：${now}, currentTimePrefix: ${currentTimePrefix}`,
-    );
+    // this.logger.log(
+    //   `当前时间：${now}, currentTimePrefix: ${currentTimePrefix}`,
+    // );
     try {
       // 查找所有启用了推送且推送时间在当前半小时区间内的设置
       const pushSettingsToNotify =
@@ -55,9 +55,11 @@ export class PushService implements OnModuleInit {
           },
         });
 
-      this.logger.log(
-        `找到 ${pushSettingsToNotify.length} 个推送设置需要在本半小时内执行, 推送设置: ${JSON.stringify(pushSettingsToNotify)}`,
-      );
+      if (pushSettingsToNotify.length > 0) {
+        this.logger.log(
+          `找到 ${pushSettingsToNotify.length} 个推送设置需要在本半小时内执行, 推送设置: ${JSON.stringify(pushSettingsToNotify)}`,
+        );
+      }
 
       // 为匹配的设置执行推送任务调度
       await this.scheduleUserPushTasks(pushSettingsToNotify);

@@ -87,8 +87,7 @@ class AiService {
       );
       const endTime = Date.now();
       this.logger.log(
-        '查询天气耗时: ',
-        timeTool.formatDuration(endTime - startTime),
+        `查询天气耗时: ${timeTool.formatDuration(endTime - startTime)}`,
       );
       // 接口返回数据
       const message: string = res.data?.choices?.[0]?.message?.content ?? '';
@@ -96,7 +95,7 @@ class AiService {
 
       // 提取出 ```json 与 ``` 之间的数据
       const messageData =
-        message.match(/```json([\s\S]*)```/)?.[1]?.trim() || '';
+        message.match(/(?:```|''')json([\s\S]*)(?:```|''')/)?.[1]?.trim() || '';
       this.logger.log('解析出的天气数据', messageData);
       return messageData;
     } catch (error) {
@@ -168,7 +167,7 @@ class AiService {
 
       // 提取出 ```json 与 ``` 之间的数据
       const messageData =
-        message.match(/```json([\s\S]*)```/)?.[1]?.trim() || '';
+        message.match(/(?:```|''')json([\s\S]*)(?:```|''')/)?.[1]?.trim() || '';
       this.logger.log('解析出的每日一签数据', messageData);
       return messageData;
     } catch (error) {
