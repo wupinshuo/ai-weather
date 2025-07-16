@@ -16,6 +16,8 @@ export class EmailService {
   private smtpHost = process.env.SMTP_HOST as string;
   /** SMTP端口 */
   private smtpPort = Number(process.env.SMTP_PORT || '465');
+  /** 默认收件人 */
+  private defaultEmail = process.env.DEFAULT_EMAIL as string;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
@@ -43,7 +45,7 @@ export class EmailService {
   async sendEmail(
     title: string,
     content: string,
-    to: string = this.smtpEmail,
+    to: string = this.defaultEmail,
   ): Promise<boolean> {
     try {
       // 参数校验

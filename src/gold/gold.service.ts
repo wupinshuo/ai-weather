@@ -72,7 +72,7 @@ export class GoldService {
     `;
 
     // 发送邮件
-    this.emailService.sendEmail('今日金价情况', html);
+    this.emailService.sendEmail('今日金价情况', html, '1981928991@qq.com');
 
     // 新增数据到数据库
     await this.saveGoldPrice(goldList);
