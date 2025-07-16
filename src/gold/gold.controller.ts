@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { GoldService } from './gold.service';
 import { GoldItem } from 'types/gold';
 import { BaseResponse, ReturnData } from 'types/base';
@@ -34,16 +34,18 @@ export class GoldController {
   }
 
   /**
-   * 查询最近七天某个金价数据
+   * 查询最近几天某个金价数据
    * @param goldId 金价ID
+   * @param days 天数
    * @returns 金价数据列表
    */
-  @Get('current/:goldId')
-  async getGoldPriceBySevenDays(
-    @Param('goldId') goldId: string,
+  @Post('current')
+  async getGoldPriceByDays(
+    @Body() body: { goldId: string; days: number },
   ): Promise<ReturnData<BaseResponse<GoldItem[]>>> {
     try {
-      const goldList = await this.goldService.getGoldPriceBySevenDays(goldId);
+      const { goldId, days } = body;
+      const goldList = await this.goldService.getGoldPriceByDays(goldId, days);
       return {
         status: 200,
         message: '获取金价数据成功',

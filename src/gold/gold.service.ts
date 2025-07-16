@@ -81,13 +81,17 @@ export class GoldService {
   }
 
   /**
-   * 查询最近七天某个金价数据
+   * 查询最近几天某个金价数据
    * @param goldId 金价ID
+   * @param days 天数 默认7天
    * @returns 金价数据列表
    */
-  public async getGoldPriceBySevenDays(goldId: string): Promise<GoldItem[]> {
+  public async getGoldPriceByDays(
+    goldId: string,
+    days: number = 7,
+  ): Promise<GoldItem[]> {
     const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - days);
 
     const goldList = await this.prismaService.gold.findMany({
       where: { gold_id: goldId, time: { gte: sevenDaysAgo } },
