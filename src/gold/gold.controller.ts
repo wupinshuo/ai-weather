@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post } from '@nestjs/common';
 import { GoldService } from './gold.service';
 import { GoldItem } from 'types/gold';
 import { BaseResponse, ReturnData } from 'types/base';
@@ -13,7 +13,7 @@ export class GoldController {
    * 获取所有金价数据
    * @returns 金价数据列表
    */
-  @Get()
+  @Post()
   async getAllGoldPrices(): Promise<ReturnData<BaseResponse<GoldItem[]>>> {
     try {
       const goldList = await this.goldService.getGoldPrice();
