@@ -104,6 +104,10 @@ export class GoldService {
     const result = goldList.reduce((acc, item) => {
       const date = item.time.toISOString().split('T')[0];
       if (!acc[date]) {
+        // 如果goldId为jj，则替换name为“金价”
+        if (item.gold_id === 'jj') {
+          item.name = '金价';
+        }
         acc[date] = {
           goldId: item.gold_id,
           name: item.name,

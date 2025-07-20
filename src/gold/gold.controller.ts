@@ -16,8 +16,15 @@ export class GoldController {
   @Get()
   async getAllGoldPrices(): Promise<ReturnData<BaseResponse<GoldItem[]>>> {
     try {
-      const goldList =
-        await this.goldService.getGoldPriceByAiPushEmailAndSave();
+      const goldList = await this.goldService.getGoldPrice();
+      // 如果goldId为jj，则替换name为“金价”
+      if (goldList) {
+        goldList.forEach((item) => {
+          if (item.goldId === 'jj') {
+            item.name = '金价';
+          }
+        });
+      }
       return {
         status: 200,
         message: '获取金价数据成功',
