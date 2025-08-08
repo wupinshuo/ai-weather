@@ -68,8 +68,8 @@ export class PushService implements OnModuleInit {
     }
   }
 
-  /** 每天早上9点05分更新金价 */
-  @Cron('0 05 09 * * *')
+  /** 每天早上9点15分更新金价 */
+  @Cron('0 15 09 * * *')
   public async updateGoldPrice() {
     this.logger.log(`开始更新金价`);
     await this.goldService.getGoldPriceByAiPushEmailAndSave();
