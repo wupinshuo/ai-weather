@@ -67,9 +67,10 @@ export class EmailService {
         // text: content, // 文本内容
         html: content, // 如果需要发送HTML格式
       });
+      this.logger.log('发送邮件成:', to, title);
       return true;
     } catch (error) {
-      console.error('发送邮件失败:', error);
+      this.logger.error('发送邮件失败:', error);
       return false;
     }
   }
