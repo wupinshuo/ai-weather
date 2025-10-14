@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { GoldItem } from 'types/gold';
+import { GoldItem, GoldHistoryResponse } from 'types/gold';
 import { BaseResponse } from 'types/base';
 import { dataHarvester } from 'api/data-harvester';
 import { timeTool } from 'tools/time-tool';
@@ -107,7 +107,7 @@ export class GoldService {
     const result = goldList.reduce((acc, item) => {
       const date = item.time.toISOString().split('T')[0];
       if (!acc[date]) {
-        // 如果goldId为jj，则替换name为“金价”
+        // 如果goldId为jj，则替换name为"金价"
         if (item.gold_id === 'jj') {
           item.name = '金价';
         }
@@ -122,5 +122,78 @@ export class GoldService {
     }, {});
 
     return Object.values(result);
+  }
+
+  /**
+   * 更新今日最高金价
+   * 查询今日最高金价并更新数据库中今天的最新"今日金价"(goldId='jj')记录
+   */
+  public async updateTodayHighestGoldPrice(): Promise<void> {
+    try {
+      // 获取今日最高金价
+      const highestPrice = await dataHarvester.getTodayHighestGoldPrice();
+      if (!highestPrice) {
+        this.logger.error('获取今日最高金价失败');
+        return;
+      }
+
+      // 获取今天的日期范围（当天 00:00:00 到 23:59:59）
+      const today = timeTool.getChinaTimeDate();
+      const startOfDay = new Date(today);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(today);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      // 查找今天的最新"今日金价"记录
+      const todayGoldRecord = await this.prismaService.gold.findFirst({
+        where: {
+          gold_id: 'jj',
+          time: {
+            gte: startOfDay,
+            lte: endOfDay,
+          },
+        },
+        orderBy: {
+          time: 'desc',
+        },
+      });
+
+      if (!todayGoldRecord) {
+        this.logger.warn('未找到今天的金价记录');
+        return;
+      }
+
+      // 更新最高金价
+      await this.prismaService.gold.update({
+        where: { id: todayGoldRecord.id },
+        data: { price: highestPrice },
+      });
+
+      this.logger.log(
+        `成功更新今日最高金价: ${highestPrice} 元/克 (记录ID: ${todayGoldRecord.id})`,
+      );
+    } catch (error) {
+      this.logger.error(`更新今日最高金价失败: ${error.message}`, error.stack);
+    }
+  }
+
+  /**
+   * 查询历史金价数据（只返回"今日金价"）
+   * @param days 查询天数（1/3/7）
+   * @returns 历史金价数据
+   */
+  public async getGoldPriceHistory(
+    days: number,
+  ): Promise<GoldHistoryResponse | null> {
+    try {
+      const historyData = await dataHarvester.getGoldPriceHistory(days);
+      return historyData;
+    } catch (error) {
+      this.logger.error(
+        `查询${days}天历史金价数据失败: ${error.message}`,
+        error.stack,
+      );
+      return null;
+    }
   }
 }

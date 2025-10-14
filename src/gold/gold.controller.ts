@@ -1,6 +1,6 @@
 import { Body, Controller, Logger, Post } from '@nestjs/common';
 import { GoldService } from './gold.service';
-import { GoldItem } from 'types/gold';
+import { GoldItem, GoldHistoryResponse } from 'types/gold';
 import { BaseResponse, ReturnData } from 'types/base';
 
 @Controller('gold')
@@ -63,6 +63,40 @@ export class GoldController {
       return {
         status: 500,
         message: '获取金价数据失败',
+        data: null,
+      };
+    }
+  }
+
+  /**
+   * 查询历史金价数据（只返回"今日金价"）
+   * @param days 查询天数（1/3/7）
+   * @returns 历史金价数据
+   */
+  @Post('history')
+  async getGoldPriceHistory(
+    @Body() body: { days: number },
+  ): Promise<ReturnData<GoldHistoryResponse | null>> {
+    try {
+      const { days } = body;
+      const historyData = await this.goldService.getGoldPriceHistory(days);
+      if (!historyData) {
+        return {
+          status: 500,
+          message: '查询历史金价数据失败',
+          data: null,
+        };
+      }
+      return {
+        status: 200,
+        message: '查询历史金价数据成功',
+        data: historyData,
+      };
+    } catch (error) {
+      this.logger.error(`查询历史金价数据失败: ${error.message}`);
+      return {
+        status: 500,
+        message: '查询历史金价数据失败',
         data: null,
       };
     }

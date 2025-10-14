@@ -76,6 +76,14 @@ export class PushService implements OnModuleInit {
     this.logger.log(`金价更新完成`);
   }
 
+  /** 每天晚上11点更新今日最高金价 */
+  @Cron('0 0 23 * * *')
+  public async updateTodayHighestGoldPrice() {
+    this.logger.log(`开始更新今日最高金价`);
+    await this.goldService.updateTodayHighestGoldPrice();
+    this.logger.log(`今日最高金价更新完成`);
+  }
+
   /**
    * 为用户调度推送任务
    * @param pushSettings 需要推送的设置列表
