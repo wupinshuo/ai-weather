@@ -18,6 +18,8 @@ export class EmailService {
   private smtpPort = Number(process.env.SMTP_PORT || '465');
   /** 默认收件人 */
   private defaultEmail = process.env.DEFAULT_EMAIL as string;
+  /** 发送邮件列表 */
+  private emailList = (process.env.EMAIL_LIST || '')?.split(',');
 
   constructor() {
     this.transporter = nodemailer.createTransport({
@@ -71,6 +73,39 @@ export class EmailService {
       return true;
     } catch (error) {
       this.logger.error('发送邮件失败:', error);
+      return false;
+    }
+  }
+
+  /**
+   * 批量发送邮件
+   * @param title 标题
+   * @param content 内容
+   * @returns 发送结果
+   */
+  async sendBatchEmails(title: string, content: string): Promise<boolean> {
+    try {
+      // 参数校验
+      if (
+        !title ||
+        !content ||
+        !this.emailList ||
+        this.emailList.length === 0
+      ) {
+        console.error('参数校验失败');
+        return false;
+      }
+      // 批量发送邮件
+      const sendPromises = this.emailList.map((email) =>
+        this.sendEmail(title, content, email),
+      );
+      const sendResults = await Promise.all(sendPromises);
+      // 检查是否所有邮件都发送成功
+      const allSent = sendResults.every((result) => result);
+      this.logger.log('批量发送邮件结果:', sendResults);
+      return allSent;
+    } catch (error) {
+      this.logger.error('批量发送邮件失败:', error);
       return false;
     }
   }
