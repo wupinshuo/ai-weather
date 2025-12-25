@@ -67,7 +67,6 @@ export class GoldService {
       <div>
         <h1>今日金价情况</h1>
         <p>今日金价: ${goldList.find((item) => item.goldId === 'jj')?.price} 元/克</p>
-        <p>周大福金价: ${goldList.find((item) => item.goldId === 'zdf')?.price} 元/克</p>
       </div>
     `;
 
